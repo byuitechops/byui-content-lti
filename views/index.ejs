@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= course %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>
+    <%= "Sample home page for " + course %>
+  </h1>
+  <p>Welcome
+    <%= name %>! Here is all the LTI info you desire</p>
+  <% for(prop in info){ %>
+    <p>
+      <%= prop + " | " + info[prop] %>
+    </p>
+    <%  } %>
+</body>
+
+</html>
