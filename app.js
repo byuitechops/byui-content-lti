@@ -11,7 +11,7 @@ var https = require('https');
 var fs = require('fs')
 
 var app = express();
-if (!process.env) {
+if (!process.env.URL) {
   https.createServer({
     pfx: fs.readFileSync('crt/crt.pfx'),
     passphrase: 'byuicontent'
