@@ -11,10 +11,12 @@ var https = require('https');
 var fs = require('fs')
 
 var app = express();
-https.createServer({
-  pfx: fs.readFileSync('crt/crt.pfx'),
-  passphrase: 'byuicontent'
-}, app).listen(1830)
+if (!process.env) {
+  https.createServer({
+    pfx: fs.readFileSync('crt/crt.pfx'),
+    passphrase: 'byuicontent'
+  }, app).listen(1830)
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

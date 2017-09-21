@@ -6,12 +6,12 @@
   <blti:title>BYUI-Content</blti:title>
   <blti:description></blti:description>
   <blti:icon></blti:icon>
-  <blti:launch_url>https://localhost:1830/</blti:launch_url>
+  <blti:launch_url>https://fierce-mesa-48470.herokuapp.com/</blti:launch_url>
   <blti:extensions platform="canvas.instructure.com">
     <lticm:property name="tool_id">byui-content</lticm:property>
     <lticm:property name="privacy_level">public</lticm:property>
     <lticm:options name="resource_selection">
-      <lticm:property name="url">https://localhost:1830/</lticm:property>
+      <lticm:property name="url">https://fierce-mesa-48470.herokuapp.com/</lticm:property>
       <lticm:property name="text">BYUI-Content</lticm:property>
       <lticm:property name="selection_width">400</lticm:property>
       <lticm:property name="selection_height">300</lticm:property>
