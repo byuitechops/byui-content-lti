@@ -14,7 +14,7 @@ var app = express();
 https.createServer({
   pfx: fs.readFileSync('crt/crt.pfx'),
   passphrase: 'byuicontent'
-}, app).listen(process.env.PORT || 1830)
+}, app).listen(1830)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
