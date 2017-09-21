@@ -11,17 +11,20 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a:link {
+a {
   color: #fff;
-  background: #234;
+}
+
+a:link {
+  background-color: #234;
   padding: 5px 15px;
   text-decoration: none;
-  transition: .3s;
   width: 100%;
   display: block;
   margin: 3px;
+  transition: .3s;
 }
 
 a:hover {
-  background: #345;
+  background-color: #345;
 }

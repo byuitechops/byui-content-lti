@@ -9,7 +9,6 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var https = require('https');
 var fs = require('fs')
-
 var app = express();
 if (!process.env.URL) {
   https.createServer({
@@ -39,8 +38,8 @@ app.use(session({
 
 // LTI middleware for use
 app.use(ltiMiddleware({
-  consumer_key: "byui-content", // Required. 
-  consumer_secret: "byui-content-secret" // Required. 
+  consumer_key: "byui-content",
+  consumer_secret: "byui-content-secret"
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -60,7 +59,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = err;
 
   // render the error page
   res.status(err.status || 500);
