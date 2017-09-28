@@ -39,7 +39,7 @@ router.post('/pathtocontent', function (req, res, next) {
 router.get('/search/:query', function (req, res, next) {
   var query = req.params["query"];
   var headers = {
-    "X-Authorization": "access_token=" + auth.access_token
+    "X-Authorization": "access_token=" + process.env.access_token || auth.access_token
   }
   var options = {
     hostname: 'byuidev.equella.ecollege.com',
