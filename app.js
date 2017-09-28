@@ -1,3 +1,4 @@
+/*eslint-env node, es6*/
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -38,8 +39,8 @@ app.use(session({
 
 // LTI middleware for use
 app.use(ltiMiddleware({
-  consumer_key: "byui-content",
-  consumer_secret: "byui-content-secret"
+  consumer_key: "LTIBrain",
+  consumer_secret: "bSwBP5KLMd9urhrz"
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));

@@ -5,26 +5,39 @@
   <title>
     <%= course %>
   </title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="/javascripts/search.js"></script>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css' />
   <link rel='stylesheet' href='/stylesheets/style.css' />
-
 </head>
 
 <body>
-  <h1>
-    <%= "Sample page for " + course %>
-  </h1>
-  <p>Welcome
-    <%= name %>! Please select the desired resource below:</p>
-  <a href="<%= info.ext_content_return_url %>?return_type=lti_launch_url&url=https%3A%2F%2Ffierce-mesa-48470.herokuapp.com%2Fpathtocontent">This is a link to send back</a>
-  <a href="<%= info.ext_content_return_url %>?return_type=lti_launch_url&url=https%3A%2F%2Ffierce-mesa-48470.herokuapp.com%2Fpathtocontent">This is a link to send back</a>
-  <a href="<%= info.ext_content_return_url %>?return_type=lti_launch_url&url=https%3A%2F%2Ffierce-mesa-48470.herokuapp.com%2Fpathtocontent">This is a link to send back</a>
-  <a href="<%= info.ext_content_return_url %>?return_type=lti_launch_url&url=https%3A%2F%2Ffierce-mesa-48470.herokuapp.com%2Fpathtocontent">This is a link to send back</a>
-  <h2>The following are for developmental reference only</h2>
-  <% for(prop in info){ %>
-    <p>
-      <%= prop + " | " + info[prop] %>
-    </p>
-    <%  } %>
+  <div class="container">
+    <h4>Content Search</h4>
+    <p>Welcome
+      <%= name %>! Please search for the desired resource below:</p>
+    <nav>
+      <div class="nav-wrapper blue">
+        <form id="searchForm" action="javascript:search()">
+          <div class="input-field">
+            <input id="search" type="search" required>
+            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+            <i class="material-icons">close</i>
+          </div>
+        </form>
+      </div>
+    </nav>
+    <div id="searchResults" class="collection"></div>
+  </div>
+
+  <!-- <h2>The following are for developmental reference only</h2>
+      <% for(prop in info){ %>
+        <p>
+          <%= prop + " | " + info[prop] %>
+        </p>
+        <% } %>-->
 </body>
 
 </html>
