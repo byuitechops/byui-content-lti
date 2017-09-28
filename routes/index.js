@@ -1,19 +1,25 @@
+/*eslint-env node*/
 var express = require('express');
 var router = express.Router();
 var https = require('https');
-var auth = require('../auth.json')
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  console.log("Confirmation page")
   res.render('test', {
     name: "Error! Try again Buster"
   });
 });
+var auth
+if (!process.env.access_token) {
+  auth = require('../auth.json')
+} else {
+  auth = {
+    access_token: process.env.access_token
+  }
+}
 
 /* POST home page to search */
 router.post('/', function (req, res, next) {
   var ltiInfo = req.lti.body
-  console.log(ltiInfo)
   res.render('index', {
     name: ltiInfo.lis_person_name_given,
     course: ltiInfo.context_title,
@@ -39,7 +45,7 @@ router.post('/pathtocontent', function (req, res, next) {
 router.get('/search/:query', function (req, res, next) {
   var query = req.params["query"];
   var headers = {
-    "X-Authorization": "access_token=" + process.env.access_token || auth.access_token
+    "X-Authorization": "access_token=" + auth.access_token
   }
   var options = {
     hostname: 'byuidev.equella.ecollege.com',
