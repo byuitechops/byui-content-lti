@@ -39,8 +39,8 @@ app.use(session({
 
 // LTI middleware for use
 app.use(ltiMiddleware({
-  consumer_key: "LTIBrain",
-  consumer_secret: "bSwBP5KLMd9urhrz"
+  consumer_key: "byui-content",
+  consumer_secret: "byui-content-secret"
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
