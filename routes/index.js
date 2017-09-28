@@ -2,12 +2,6 @@
 var express = require('express');
 var router = express.Router();
 var https = require('https');
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('test', {
-    name: "Error! Try again Buster"
-  });
-});
 var auth
 if (!process.env.access_token) {
   auth = require('../auth.json')
@@ -16,6 +10,13 @@ if (!process.env.access_token) {
     access_token: process.env.access_token
   }
 }
+
+/* GET home page. */
+router.get('/', function (req, res, next) {
+  res.render('test', {
+    name: "Error! Try again Buster"
+  });
+});
 
 /* POST home page to search */
 router.post('/', function (req, res, next) {
