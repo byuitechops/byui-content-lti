@@ -8,16 +8,23 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-  <script src="/javascripts/search.js"></script>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css' />
   <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script>
+    var courseId = '<%= courseId %>';
+
+  </script>
+  <script src="/javascripts/content.js"></script>
 </head>
 
 <body>
   <div class="container">
-    <h4>Content Search</h4>
+    <h4 class="pull-left">Content Search</h4>
+    <div class="fixed-action-btn" style="top:24px">
+      <a class="btn-floating" href="https://byui.instructure.com/courses/142/external_content/success/external_tool_dialog?return_type=lti_launch_url&url=https%3A%2F%2Flocalhost%3A1830%2Flti%2Fcontent%2F%3Fnew=true&title=New%20Page" class="collection-item"><i class="material-icons">add</i></a>
+    </div>
     <p>Welcome
-      <%= name %>! Please search for the desired resource below:</p>
+      <%= name %>! Please search for the desired resource, or select it below:</p>
     <nav>
       <div class="nav-wrapper blue">
         <form id="searchForm" action="javascript:search()">
@@ -30,6 +37,10 @@
       </div>
     </nav>
     <div id="searchResults" class="collection"></div>
+    <h4>Content for
+      <%= courseId %>
+    </h4>
+    <div id="courseContent" class="collection"></div>
   </div>
 
   <!-- <h2>The following are for developmental reference only</h2>

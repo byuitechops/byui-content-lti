@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 var ltiMiddleware = require("express-ims-lti");
 var session = require('express-session');
 var index = require('./routes/index');
-var users = require('./routes/users');
+var lti = require('./routes/lti');
+var api = require('./routes/api');
 var https = require('https');
 var fs = require('fs')
 var app = express();
@@ -45,9 +46,9 @@ app.use(ltiMiddleware({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
-
+app.use('/', index)
+app.use('/lti', lti)
+app.use('/api', api)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
