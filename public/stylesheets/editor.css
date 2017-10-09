@@ -1,0 +1,62 @@
+.editorContainer, .contentContainer {
+  margin: 2rem 1rem;
+  min-height: 10rem;
+}
+.saveWarning {
+  color: #ffccbc;
+}
+.saveWarning::after {
+  background: #ff8a65;
+  color: #bf360c;
+}
+
+#main {
+  width: 100% !important;
+  margin: 0 !important;
+}
+.contentContainer {
+  display: none;
+  font-family: 'PT Sans', sans-serif;
+}
+.additionalContent {
+  padding: 5px 10px;
+  min-height: 5rem;
+}
+.additionalContent h4 {
+  margin: 0;
+  padding: 0;
+}
+.additionalContent p {
+  margin: 1rem;
+}
+.labelMsg {
+  font-style: italic;
+  color: #bdbdbd;
+}
+.commitContainer {
+  width: 100% !important;
+}
+.commitField {
+  outline: none;
+  color: #757575 !important;
+}
+.commitField:focus {
+  color: #424242 !important;
+}
+.versionTable {
+  margin-bottom: 1rem;
+}
+
+.customToast {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 30%;
+  color: white;
+  padding: 1rem;
+  z-index: 1000;
+  min-width: 288px;
+  max-width: 568px;
+  background-color: #323232;
+  transition: transform .25s cubic-bezier(.4, 0, 1, 1), -webkit-transform .25s cubic-bezier(.4, 0, 1, 1);
+}

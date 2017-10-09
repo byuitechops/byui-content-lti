@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Content Editor</title>
+
+  <!-- Bring in Material Icons, and JS for MDL -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+  <!-- TinyMCE requires jquery, importing it here -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Bring in Tiny MCE Scripts -->
+  <script src="/javascripts/tinymce/tinymce.min.js"></script>
+  <script src="/javascripts/tinymce/jquery.tinymce.min.js"></script>
+
+  <!-- Bring in Moment Scripts -->
+  <script src="/javascripts/moment.min.js"></script>
+
+  <!-- Link Local Stylesheet and JS -->
+  <link rel="stylesheet" type="text/css" href="styles/editor.css">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-indigo.min.css">
+  <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+  <script>
+    /*LTI generated variables*/
+    var course = '<%= course %>';
+    var fileName = '<%= escape(fileName) %>';
+    var lti_user_private_key = '<%= lti_user_private_key %>';
+    var equellaUrl = '<%= equellaUrl %>';
+
+  </script>
+  <script src="/javascripts/scripts.js"></script>
+</head>
+
+<body>
+  <!-- Always shows a header, even in smaller screens. -->
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span id="fileName_title" class="mdl-layout-title titleFile"></span>
+        <!-- Add spacer, to align navigation to the right -->
+        <div class="mdl-layout-spacer"></div>
+        <!-- Navigation. We hide it in small screens. -->
+        <nav class="mdl-navigation mdl-layout--fixed-header">
+          <a id="edit" class="mdl-navigation__link activeLink" href=""><i class="material-icons">mode_edit</i></a>
+          <a id="history" class="mdl-navigation__link" href=""><i class="material-icons">history</i></a>
+          <a id="settings" class="mdl-navigation__link" href=""><i class="material-icons">settings</i></a>
+          <a id="save" class="mdl-navigation__link" href=""><i class="material-icons mdl-badge mdl-badge--overlap saveBtn">save</i></a>
+        </nav>
+      </div>
+    </header>
+    <main class="mdl-layout__content">
+      <div class="page-content">
+        <div class="editorContainer mdl-shadow--2dp">
+          <textarea id="initial_textarea"></textarea>
+        </div>
+      </div>
+      <div class="page-content contentContainer">
+        <div class="additionalContent mdl-shadow--2dp"></div>
+      </div>
+      <div id="demo-toast" class="customToast">
+        <div id='toastMsg' class="customToastText"></div>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>
