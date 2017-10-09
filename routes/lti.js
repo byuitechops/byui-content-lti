@@ -19,31 +19,31 @@ router.post('/', function (req, res, next) {
 router.post('/content', function (req, res, next) {
   ltiInfo = req.lti.body
   if (req.query.new == 'true') {
+    req.session.equellaUrl = null;
+    req.session.fileName = req.query.name || "New Page";
+    // add ability to set new page name later
     res.render('edit', {
-      fileName: req.query.name || 'New Page',
-      equellaUrl: null,
-      lti_user_private_key: btoa(ltiInfo.lis_person_contact_email_primary + ":" + ltiInfo.user_id),
-      name: ltiInfo.lis_person_name_given,
-      course: ltiInfo.context_title
+      //      fileName: req.query.name || 'New Page',
+      //      name: ltiInfo.lis_person_name_given,
+      //      course: ltiInfo.context_title,
+      //      equellaUrl: null
     })
   } else {
-    var resourceUrl = req.query.url
+    req.session.equellaUrl = req.query.url;
     if (ltiInfo.roles.includes('Instructor')) {
-      var itemId = resourceUrl.split('/')[5]
-      var version = resourceUrl.split('/')[6]
-      var attachmentId = resourceUrl.split('=')[1]
-      equ.getAttachment(itemId, attachmentId, version, function (attachment) {
-        res.render('edit', {
-          fileName: attachment.description,
-          /*needs fixed: not sure how we are going to authenticate with github*/
-          lti_user_private_key: btoa(ltiInfo.lis_person_contact_email_primary + ":" + ltiInfo.user_id),
-          equellaUrl: resourceUrl,
-          name: ltiInfo.lis_person_name_given,
-          course: ltiInfo.context_title
-        })
+      //      var itemId = req.equellaUrl.split('/')[5]
+      //      var version = req.equellaUrl.split('/')[6]
+      //      var attachmentId = req.equellaUrl.split('=')[1]
+      //      equ.getAttachment(itemId, attachmentId, version, function (attachment) {
+      res.render('edit', {
+        //          fileName: attachment.description,
+        //          name: ltiInfo.lis_person_name_given,
+        //          course: ltiInfo.context_title,
+        //        equellaUrl: req.session.equellaUrl
       })
+      //    })
     } else {
-      res.redirect(resourceUrl)
+      res.redirect(req.session.equellaUrl)
     }
   }
 })

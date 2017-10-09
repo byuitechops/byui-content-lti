@@ -2,6 +2,7 @@
 var https = require('https')
 var auth
 var request = require('request')
+var btoa = require('btoa')
 /*check for global auth, else load it from the disk*/
 if (!process.env.access_token) {
   auth = require('../auth.json')
@@ -41,6 +42,30 @@ function getAttachment(itemId, attachmentId, version, callback) {
 }
 
 
+
+function commitChanges(data, lti_user_private_key) {
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://api.github.com/repos/byuitechops/content_editor_v2/contents/" + data.file_path,
+    "method": "PUT",
+    "headers": {
+      "authorization": "Basic " + lti_user_private_key
+    },
+    "data": JSON.stringify(data)
+  }
+
+  request(settings, function (err, response) {
+    if (err) {
+      console.log("Commiting File Failed: ", err.responseJSON)
+    } else {
+      console.log(response);
+    }
+  })
+}
+
+
 module.exports = {
-  getAttachment: getAttachment
+  getAttachment: getAttachment,
+  commitChanges: commitChanges
 }

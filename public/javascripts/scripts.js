@@ -1,9 +1,6 @@
-/*eslint-env  browser*/
+/*eslint-env  browser, jquery*/
+/*global tinymce*/
 window.onload = function () {
-  var file_sha;
-  var file_path;
-  var bodyHtml;
-
   var editor = $('#initial_textarea');
 
   tinymce.init({
@@ -29,7 +26,7 @@ window.onload = function () {
     plugins: [
       'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker template',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table contextmenu directionality emoticons template paste textcolor'
+      'save table contextmenu directionality emoticons template paste textcolor fullpage'
     ],
     toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | preview media fullpage | forecolor backcolor template',
 
@@ -37,12 +34,12 @@ window.onload = function () {
 
     templates: [
       {
-        title: 'Simple',
+        title: 'BYU-I Module Overview',
         description: 'Simple Template',
         content: '<h2>Here is a test</h2><p>Your content...</p>'
       },
       {
-        title: 'Custom',
+        title: 'BYU-I Assignment Instructions',
         description: 'Some custom template',
         content: '<p>A very custom template...</p>'
       }
@@ -50,72 +47,11 @@ window.onload = function () {
   });
 
 
-  //Fetch data from GitHub
-  $.ajax({
-    url: "https://api.github.com/repos/byuitechops/content_editor_v2/contents/" + fileName,
-    context: document.body
-  }).done(function (value) {
-    fileName = value.name;
-    file_sha = value.sha;
-    file_path = value.path;
-    $.ajax({
-      url: value.download_url,
-      context: document.body
-    }).done(function (result) {
-      // Update title of page with fileName
-      $('#fileName_title').html(fileName);
-      // Set tinymce content to that of the file
-      tinymce.activeEditor.setContent(result);
-    });
-  }).fail(function (e) {
-    if (e.status === 404) {
-      createPage(fileName)
-    } else {
-      console.log("Error: ", e);
-    }
-  });
-
-  //Create item in GitHub
-  function createPage(fileName) {
-    // When implementing LTI piece you can have the user's private key assigned here:
-    // NOTE: This is the Base-64 version of the user's private key
-    // You MUST Base-64 encode the (user_id?) obtained via the LTI, you can use 'btoa([private key to encode])'
-    lti_user_private_key = 'Y2Ntcy1kZW1vOmVjYTZkYzVkNmRlNmYwMDc2MWFjOGJkZjAwMTE2NTA4M2RhNjMxZjE=';
-    var document = getEquellaContent(equellaUrl)
-    var encoded_file_content = btoa(document);
-    var commitMsg = "Item Created"
-
-    // AJAX data must be a JSON string, so assigning to a variable to take care of that later
-    var data = {
-      "path": fileName,
-      "message": commitMsg,
-      "content": encoded_file_content
-    };
-    var settings = {
-      "async": true,
-      "crossDomain": true,
-      "url": "https://api.github.com/repos/byuitechops/content_editor_v2/contents/" + fileName,
-      "method": "PUT",
-      "headers": {
-        "authorization": "Basic " + lti_user_private_key
-      },
-      "data": JSON.stringify(data)
-    }
-
-    $.ajax(settings).done(function (response) {}).fail(function (error) {
-      showToast(false);
-      console.log("Creating File Failed: ", error.responseJSON);
-    }).done(function (value) {
-      file_sha = value.content.sha;
-      file_path = value.content.path;
-      fileName = value.content.name;
-
-      // Update title of page with fileName
-      $('#fileName_title').html(fileName);
-      // Set tinymce content to that of the file
-      tinymce.activeEditor.setContent(document);
-    });
-  }
+  //Get GitHub location
+  $.get('/api/github').done(function (response) {
+    $('#fileName_title').html(response.title)
+    tinymce.activeEditor.setContent(response.document);
+  })
 
   //Setting active link for Nav links
   function updateActiveLink(selection, hideEditor, headerLabel) {
@@ -145,41 +81,13 @@ window.onload = function () {
   }
 
   function commitChanges(e) {
-    // When implementing LTI piece you can have the user's private key assigned here:
-    // NOTE: This is the Base-64 version of the user's private key
-    // You MUST Base-64 encode the (user_id?) obtained via the LTI, you can use 'btoa([private key to encode])'
-    lti_user_private_key = 'Y2Ntcy1kZW1vOmVjYTZkYzVkNmRlNmYwMDc2MWFjOGJkZjAwMTE2NTA4M2RhNjMxZjE=';
-    var encoded_file_content = btoa(tinymce.activeEditor.getContent());
-    var commitMsg = $('#commitMsg').val();
-
-    // AJAX data must be a JSON string, so assigning to a variable to take care of that later
-    var data = {
-      "path": file_path,
-      "sha": file_sha,
-      "message": commitMsg,
-      "content": encoded_file_content
-    };
-    var settings = {
-      "async": true,
-      "crossDomain": true,
-      "url": "https://api.github.com/repos/byuitechops/content_editor_v2/contents/" + file_path,
-      "method": "PUT",
-      "headers": {
-        "authorization": "Basic " + lti_user_private_key
-      },
-      "data": JSON.stringify(data)
-    }
-
-    $.ajax(settings).done(function (response) {
-      console.log(response);
-    }).fail(function (error) {
-      showToast(false);
-      console.log("Commiting File Failed: ", error.responseJSON);
-    }).done(function (result) {
-
-      console.log('Successfully Commited: ', result);
-      showToast(true);
-    });
+    $.ajax({
+      url: 'api/github',
+      method: 'post',
+      headers: {
+        content: tinymce.activeEditor.getContent()
+      }
+    })
   }
 
   // ------ LTI CALLS ----- 
@@ -211,7 +119,7 @@ window.onload = function () {
   $('#save').click(function (e) {
     e.preventDefault();
     updateActiveLink('save', true, 'Save');
-    var commitMsgCode = '<div class="mdl-textfield mdl-js-textfield commitContainer"><label class="labelMsg" for="commitMsg">Reason for change</label><textarea class="mdl-textfield__input commitField" type="text" rows="4" id="commitMsg">Made changes to ' + fileName + '</textarea></div><br /><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="commitSave">Save</button>';
+    var commitMsgCode = '<div class="mdl-textfield mdl-js-textfield commitContainer"><label class="labelMsg" for="commitMsg">Reason for change</label><textarea class="mdl-textfield__input commitField" type="text" rows="4" id="commitMsg">Made changes to ' + $('fileName_title').text + '</textarea></div><br /><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="commitSave">Save</button>';
     $('.additionalContent').append(commitMsgCode);
     $('#commitSave').on('click', commitChanges);
   });
