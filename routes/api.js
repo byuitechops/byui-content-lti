@@ -3,7 +3,9 @@ var express = require('express');
 var router = express.Router();
 var https = require('https');
 var equ = require('../modules/equella.js');
-var request = require('request')
+var request = require('request');
+var btoa = require('btoa');
+var git = require('../modules/github.js')
 
 var auth
 if (!process.env.access_token) {
@@ -63,145 +65,60 @@ router.get('/getCourseContent', function (req, res, next) {
   request.end();
 })
 
-router.get('/equella', function (req, res, next) {
-  var url = req.query.url;
-  console.log("Getting: ", url)
-  req.pipe(request.get(url, {
-    headers: {
-      "X-Authorization": "access_token=" + auth.access_token
-    }
-  })).pipe(res)
-})
-
-router.post('/commit', function (req, res, next) {
+router.post('/github', function (req, res, next) {
   //actually use logic to get user's key here
   var lti_user_private_key = 'Y2Ntcy1kZW1vOmVjYTZkYzVkNmRlNmYwMDc2MWFjOGJkZjAwMTE2NTA4M2RhNjMxZjE=';
-  var data = {
-
-  }
+  console.log(req.body)
+  var data = req.body.content
   equ.commitChanges(data, lti_user_private_key)
 })
 
 router.get('/github', function (req, res, next) {
   var equellaUrl = req.session.equellaUrl;
+  //check if new item
   if (equellaUrl === null) {
-    createPage(req.session.name)
+    git.createPage(req.session.name, null, pageCreated)
   } else {
-    console.log("here")
+    //if not, get Equella details
     var itemId = equellaUrl.split('/')[5]
     var version = equellaUrl.split('/')[6]
     var attachmentId = equellaUrl.split('=')[1]
     equ.getAttachment(itemId, attachmentId, version, function (attachment) {
       req.session.fileName = attachment.description;
       var uriName = encodeURI(req.session.fileName)
-      request('https://api.github.com/repos/byuitechops/content_editor_v2/contents/' + uriName, function (err, value) {
-        console.log(value)
-        req.session.fileName = value.name;
-        req.session.file_sha = value.sha;
-        req.session.file_path = value.path;
-        request(value.download_url, function (err, result, body) {
-          if (result.statusCode == 404) {
-            createPage(uriName)
-          } else {
-            res.json({
-              title: value.name,
-              document: body
-            })
-          }
-        })
+      var url = 'https://api.github.com/repos/byuitechops/content_editor_v2/contents/' + uriName;
+      //get github page if it exists
+      request({
+        url: url,
+        headers: {
+          "User-Agent": 'LTIBrain'
+        }
+      }, function (err, value, body) {
+        console.log(body)
+        if (value.statusCode == 404) {
+          //if not, create the new page with Equella content
+          equ.getContent(equellaUrl, function (equBody) {
+            git.createPage(uriName, equBody, pageCreated)
+          });
+        } else {
+          //finish the request
+          pageCreated(JSON.parse(body))
+        }
       })
     })
   }
 
-  function createPage(name) {
-    console.log("Creating Page: ", name)
+  function pageCreated(body) {
+    req.session.fileName = body.name;
+    req.session.file_sha = body.sha;
+    req.session.file_path = body.path;
+    request(body.download_url, function (err, result, docBody) {
+      res.json({
+        title: body.name,
+        document: docBody
+      })
+    })
   }
 })
 
 module.exports = router;
-
-
-
-/*//Create item in GitHub
-  function createPage(fileName) {
-    // When implementing LTI piece you can have the user's private key assigned here:
-    // NOTE: This is the Base-64 version of the user's private key
-    // You MUST Base-64 encode the (user_id?) obtained via the LTI, you can use 'btoa([private key to encode])'
-    lti_user_private_key = 'Y2Ntcy1kZW1vOmVjYTZkYzVkNmRlNmYwMDc2MWFjOGJkZjAwMTE2NTA4M2RhNjMxZjE=';
-    var document = getEquellaContent(equellaUrl)
-    var docDom = parser.parseFromString(document, "text/html");
-    docDom.querySelector('head').insertAdjacentHTML('beforeend', '<meta name="equella-url" data-url="' + equellaUrl + '">')
-    console.log(serializer.serializeToString(docDom))
-    var encoded_file_content = btoa(serializer.serializeToString(docDom));
-    var commitMsg = "Item Created"
-
-    // AJAX data must be a JSON string, so assigning to a variable to take care of that later
-    var data = {
-      "path": fileName,
-      "message": commitMsg,
-      "content": encoded_file_content
-    };
-    var settings = {
-      "async": true,
-      "crossDomain": true,
-      "url": "https://api.github.com/repos/byuitechops/content_editor_v2/contents/" + fileName,
-      "method": "PUT",
-      "headers": {
-        "authorization": "Basic " + lti_user_private_key
-      },
-      "data": JSON.stringify(data)
-    }
-
-    $.ajax(settings).done(function (response) {}).fail(function (error) {
-      showToast(false);
-      console.log("Creating File Failed: ", error.responseJSON);
-    }).done(function (value) {
-      file_sha = value.content.sha;
-      file_path = value.content.path;
-      fileName = value.content.name;
-
-      // Update title of page with fileName
-      $('#fileName_title').html(fileName);
-      // Set tinymce content to that of the file
-      tinymce.activeEditor.setContent(document);
-    });
-  }
-  
-  //Commit Changes
-      // When implementing LTI piece you can have the user's private key assigned here:
-    // NOTE: This is the Base-64 version of the user's private key
-    // You MUST Base-64 encode the (user_id?) obtained via the LTI, you can use 'btoa([private key to encode])'
-    lti_user_private_key = 'Y2Ntcy1kZW1vOmVjYTZkYzVkNmRlNmYwMDc2MWFjOGJkZjAwMTE2NTA4M2RhNjMxZjE=';
-
-    var encoded_file_content = btoa(tinymce.activeEditor.getContent());
-    var commitMsg = $('#commitMsg').val();
-
-    // AJAX data must be a JSON string, so assigning to a variable to take care of that later
-    var data = {
-      "path": file_path,
-      "sha": file_sha,
-      "message": commitMsg,
-      "content": encoded_file_content
-    };
-    var settings = {
-      "async": true,
-      "crossDomain": true,
-      "url": "https://api.github.com/repos/byuitechops/content_editor_v2/contents/" + file_path,
-      "method": "PUT",
-      "headers": {
-        "authorization": "Basic " + lti_user_private_key
-      },
-      "data": JSON.stringify(data)
-    }
-
-    $.ajax(settings).done(function (response) {
-      console.log(response);
-    }).fail(function (error) {
-      showToast(false);
-      console.log("Commiting File Failed: ", error.responseJSON);
-    }).done(function (result) {
-
-      console.log('Successfully Commited: ', result);
-      showToast(true);
-    });
-*/

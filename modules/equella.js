@@ -41,7 +41,15 @@ function getAttachment(itemId, attachmentId, version, callback) {
   secReq.end();
 }
 
-
+function getContent(url, callback) {
+  request.get(url, {
+    headers: {
+      "X-Authorization": "access_token=" + auth.access_token
+    }
+  }, function (err, data, body) {
+    callback(body);
+  })
+}
 
 function commitChanges(data, lti_user_private_key) {
   var settings = {
@@ -67,5 +75,6 @@ function commitChanges(data, lti_user_private_key) {
 
 module.exports = {
   getAttachment: getAttachment,
+  getContent: getContent,
   commitChanges: commitChanges
 }

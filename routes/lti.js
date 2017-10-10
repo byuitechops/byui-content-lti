@@ -18,9 +18,9 @@ router.post('/', function (req, res, next) {
 /* Redirect to CMS resource */
 router.post('/content', function (req, res, next) {
   ltiInfo = req.lti.body
+  req.session.fileName = req.query.name || "New Page";
   if (req.query.new == 'true') {
     req.session.equellaUrl = null;
-    req.session.fileName = req.query.name || "New Page";
     // add ability to set new page name later
     res.render('edit', {
       //      fileName: req.query.name || 'New Page',

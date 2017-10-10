@@ -46,8 +46,7 @@ window.onload = function () {
   ]
   });
 
-
-  //Get GitHub location
+  //Get Content for editor
   $.get('/api/github').done(function (response) {
     $('#fileName_title').html(response.title)
     tinymce.activeEditor.setContent(response.document);
@@ -82,28 +81,13 @@ window.onload = function () {
 
   function commitChanges(e) {
     $.ajax({
-      url: 'api/github',
+      url: '/api/github',
       method: 'post',
       headers: {
-        content: tinymce.activeEditor.getContent()
+        content: btoa(tinymce.activeEditor.getContent())
       }
     })
   }
-
-  // ------ LTI CALLS ----- 
-  function getEquellaContent(url) {
-    var result
-    $.ajax({
-      url: "/api/equella/?url=" + url,
-      success: function (data) {
-        result = data
-      },
-      async: false
-    })
-    return result
-  }
-  // ------ EQUELLA CALLS ----- 
-
 
   // ------- BUTTON CLICK LISTENERS -------
   $('#edit').click(function (e) {
@@ -119,7 +103,7 @@ window.onload = function () {
   $('#save').click(function (e) {
     e.preventDefault();
     updateActiveLink('save', true, 'Save');
-    var commitMsgCode = '<div class="mdl-textfield mdl-js-textfield commitContainer"><label class="labelMsg" for="commitMsg">Reason for change</label><textarea class="mdl-textfield__input commitField" type="text" rows="4" id="commitMsg">Made changes to ' + $('fileName_title').text + '</textarea></div><br /><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="commitSave">Save</button>';
+    var commitMsgCode = '<div class="mdl-textfield mdl-js-textfield commitContainer"><label class="labelMsg" for="commitMsg">Reason for change</label><textarea class="mdl-textfield__input commitField" type="text" rows="4" id="commitMsg">Made changes</textarea></div><br /><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="commitSave">Save</button>';
     $('.additionalContent').append(commitMsgCode);
     $('#commitSave').on('click', commitChanges);
   });
