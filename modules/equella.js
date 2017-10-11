@@ -51,30 +51,7 @@ function getContent(url, callback) {
   })
 }
 
-function commitChanges(data, lti_user_private_key) {
-  var settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://api.github.com/repos/byuitechops/content_editor_v2/contents/" + data.file_path,
-    "method": "PUT",
-    "headers": {
-      "authorization": "Basic " + lti_user_private_key
-    },
-    "data": JSON.stringify(data)
-  }
-
-  request(settings, function (err, response) {
-    if (err) {
-      console.log("Commiting File Failed: ", err.responseJSON)
-    } else {
-      console.log(response);
-    }
-  })
-}
-
-
 module.exports = {
   getAttachment: getAttachment,
-  getContent: getContent,
-  commitChanges: commitChanges
+  getContent: getContent
 }

@@ -65,19 +65,25 @@ router.get('/getCourseContent', function (req, res, next) {
   request.end();
 })
 
-router.post('/github', function (req, res, next) {
+router.put('/github', function (req, res, next) {
   //actually use logic to get user's key here
-  var lti_user_private_key = 'Y2Ntcy1kZW1vOmVjYTZkYzVkNmRlNmYwMDc2MWFjOGJkZjAwMTE2NTA4M2RhNjMxZjE=';
-  console.log(req.body)
-  var data = req.body.content
-  equ.commitChanges(data, lti_user_private_key)
+  git.commitChanges(req.session, req.body, function (data) {
+    console.log(data)
+    if (data.success) {
+      console.log("updating sha")
+      req.session.file_sha = data.sha;
+    }
+    res.json({
+      sucess: data.succes
+    })
+  })
 })
 
 router.get('/github', function (req, res, next) {
   var equellaUrl = req.session.equellaUrl;
   //check if new item
   if (equellaUrl === null) {
-    git.createPage(req.session.name, null, pageCreated)
+    git.createPage(req.session.name, null, returnPage)
   } else {
     //if not, get Equella details
     var itemId = equellaUrl.split('/')[5]
@@ -94,24 +100,23 @@ router.get('/github', function (req, res, next) {
           "User-Agent": 'LTIBrain'
         }
       }, function (err, value, body) {
-        console.log(body)
         if (value.statusCode == 404) {
           //if not, create the new page with Equella content
           equ.getContent(equellaUrl, function (equBody) {
-            git.createPage(uriName, equBody, pageCreated)
+            git.createPage(uriName, equBody, returnPage)
           });
         } else {
           //finish the request
-          pageCreated(JSON.parse(body))
+          returnPage(JSON.parse(body))
         }
       })
     })
   }
 
-  function pageCreated(body) {
+  function returnPage(body) {
     req.session.fileName = body.name;
     req.session.file_sha = body.sha;
-    req.session.file_path = body.path;
+    req.session.file_path = encodeURI(body.path);
     request(body.download_url, function (err, result, docBody) {
       res.json({
         title: body.name,

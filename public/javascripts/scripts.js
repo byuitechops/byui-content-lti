@@ -80,12 +80,17 @@ window.onload = function () {
   }
 
   function commitChanges(e) {
+    var settings = {
+      "message": $('#commitMsg').text(),
+      "content": btoa(tinymce.activeEditor.getContent())
+    }
     $.ajax({
       url: '/api/github',
-      method: 'post',
-      headers: {
-        content: btoa(tinymce.activeEditor.getContent())
-      }
+      method: 'put',
+      data: settings
+    }).done(function (data) {
+      console.log(data)
+      showToast(data.success)
     })
   }
 
