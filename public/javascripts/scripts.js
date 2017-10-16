@@ -47,7 +47,7 @@ window.onload = function () {
   });
 
   //Get Content for editor
-  $.get('/api/github').done(function (response) {
+  $.get('/api/content').done(function (response) {
     $('#fileName_title').html(response.title)
     tinymce.activeEditor.setContent(response.document);
   })
@@ -85,7 +85,7 @@ window.onload = function () {
       "content": btoa(tinymce.activeEditor.getContent())
     }
     $.ajax({
-      url: '/api/github',
+      url: '/api/content',
       method: 'put',
       data: settings
     }).done(function (data) {

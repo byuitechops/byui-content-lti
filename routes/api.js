@@ -65,7 +65,7 @@ router.get('/getCourseContent', function (req, res, next) {
   request.end();
 })
 
-router.put('/github', function (req, res, next) {
+router.put('/content', function (req, res, next) {
   //actually use logic to get user's key here
   git.commitChanges(req.session, req.body, function (data) {
     console.log(data)
@@ -79,11 +79,14 @@ router.put('/github', function (req, res, next) {
   })
 })
 
-router.get('/github', function (req, res, next) {
+router.get('/content', function (req, res, next) {
   var equellaUrl = req.session.equellaUrl;
   //check if new item
   if (equellaUrl === null) {
-    git.createPage(req.session.name, null, returnPage)
+    var content = "<h1>New Document</h1>";
+    equ.createAttachment(req, req.session.fileName, content, function (response) {
+      git.createPage(req.session.fileName, content, returnPage);
+    })
   } else {
     //if not, get Equella details
     var itemId = equellaUrl.split('/')[5]
