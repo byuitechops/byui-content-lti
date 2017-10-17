@@ -21,7 +21,12 @@
   <div class="container">
     <h4 class="pull-left">Content Search</h4>
     <div class="fixed-action-btn" style="top:24px">
-      <a class="btn-floating" href="https://byui.instructure.com/courses/142/external_content/success/external_tool_dialog?return_type=lti_launch_url&url=https%3A%2F%2Flocalhost%3A1830%2Flti%2Fcontent%2F%3Fnew=true&title=New%20Page" class="collection-item"><i class="material-icons">add</i></a>
+      <a class="btn-floating" href="#" class="collection-item" onclick="showAddPage()"><i class="material-icons">add</i></a>
+    </div>
+    <div id="createDocument" class="hidden">
+      <h5>Title for new page:</h5>
+      <input type="text" id="title">
+      <button onclick="createPage()" class="btn">Create Page</button>
     </div>
     <p>Welcome
       <%= name %>! Please search for the desired resource, or select it below:</p>

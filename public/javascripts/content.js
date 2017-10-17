@@ -23,3 +23,14 @@ function logResults(response, ele) {
     })
   })
 }
+
+function showAddPage() {
+  $('#createDocument').toggleClass('hidden');
+}
+
+function createPage() {
+  $.post('/api/content/?file_name=' + $('#title').val()).done(function (response) {
+    console.log("redirecting to: ", response.url)
+    window.location = response.url
+  })
+}

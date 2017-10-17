@@ -80,39 +80,43 @@ router.put('/content', function (req, res, next) {
 })
 
 router.get('/content', function (req, res, next) {
+  if (!req.session.equellaUrl) {
+    next("No equella url provided")
+  }
   var equellaUrl = req.session.equellaUrl;
-  //check if new item
-  if (equellaUrl === null) {
-    var content = "<h1>New Document</h1>";
-    equ.createAttachment(req, req.session.fileName, content, function (response) {
-      git.createPage(req.session.fileName, content, returnPage);
-    })
+  var uriName;
+  if (equellaUrl.split('/')[4] === 'file') {
+    uriName = equellaUrl.split('/')[7]
+    getPage()
   } else {
-    //if not, get Equella details
     var itemId = equellaUrl.split('/')[5]
     var version = equellaUrl.split('/')[6]
     var attachmentId = equellaUrl.split('=')[1]
     equ.getAttachment(itemId, attachmentId, version, function (attachment) {
-      req.session.fileName = attachment.description;
-      var uriName = encodeURI(req.session.fileName)
-      var url = 'https://api.github.com/repos/byuitechops/content_editor_v2/contents/' + uriName;
-      //get github page if it exists
-      request({
-        url: url,
-        headers: {
-          "User-Agent": 'LTIBrain'
-        }
-      }, function (err, value, body) {
-        if (value.statusCode == 404) {
-          //if not, create the new page with Equella content
-          equ.getContent(equellaUrl, function (equBody) {
-            git.createPage(uriName, equBody, returnPage)
-          });
-        } else {
-          //finish the request
-          returnPage(JSON.parse(body))
-        }
-      })
+      uriName = encodeURI(attachment.description)
+      getPage()
+    })
+  }
+
+  function getPage() {
+    req.session.fileName = decodeURI(uriName);
+    var url = 'https://api.github.com/repos/byuitechops/content_editor_v2/contents/' + uriName;
+    //get github page if it exists
+    request({
+      url: url,
+      headers: {
+        "User-Agent": 'LTIBrain'
+      }
+    }, function (err, value, body) {
+      if (value.statusCode == 404) {
+        //if not, create the new page with Equella content
+        equ.getContent(equellaUrl, function (equBody) {
+          git.createPage(uriName, equBody, returnPage)
+        });
+      } else {
+        //finish the request
+        returnPage(JSON.parse(body))
+      }
     })
   }
 
@@ -127,6 +131,16 @@ router.get('/content', function (req, res, next) {
       })
     })
   }
+})
+
+router.post('/content', function (req, res, next) {
+  var fileName = req.query.file_name;
+  var content = "<h1>" + fileName + "</h1>";
+  equ.createAttachment(req, fileName, content, function (response) {
+    res.json({
+      url: 'https://byui.instructure.com/courses/142/external_content/success/external_tool_dialog?return_type=lti_launch_url&url=https%3A%2F%2Flocalhost%3A1830%2Flti%2Fcontent%2F%3Furl=' + escape(encodeURIComponent(response.contentUrl)) + '&title=' + escape(fileName)
+    })
+  })
 })
 
 module.exports = router;

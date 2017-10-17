@@ -99,14 +99,13 @@ function createAttachment(req, fileName, content, callback) {
             ]
         },
       }, function (err, data, body) {
-        if (err) {
-          console.log(err)
-        } else {
-          callback({
-            success: true,
-            contentUrl: newUrl
-          })
-        }
+        var itemId = data.headers.location.split('/')[6]
+        console.log(itemId)
+        console.log("Item created?: ", data.statusCode)
+        callback({
+          success: true,
+          contentUrl: "https://byuidev.equella.ecollege.com/original/file/" + itemId + "/1/" + encodeURI(fileName) + ".html",
+        })
       })
     })
   })
