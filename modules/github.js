@@ -41,7 +41,6 @@ function createPage(fileName, document, callback) {
   })
 }
 
-
 function commitChanges(session, data, callback) {
   data["path"] = session.file_path;
   data["sha"] = session.file_sha;

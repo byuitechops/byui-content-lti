@@ -68,13 +68,21 @@ router.get('/getCourseContent', function (req, res, next) {
 router.put('/content', function (req, res, next) {
   //actually use logic to get user's key here
   git.commitChanges(req.session, req.body, function (data) {
-    console.log(data)
     if (data.success) {
-      console.log("updating sha")
+      console.log("Updating sha")
       req.session.file_sha = data.sha;
     }
     res.json({
       sucess: data.succes
+    })
+  })
+  var itemId = req.session.equellaUrl.split('/')[5]
+  equ.updateAttachment(itemId, req.body, function (data) {
+    if (data.sucess) {
+      console.log("Updated Equella")
+    }
+    res.json({
+      sucess: data.success
     })
   })
 })

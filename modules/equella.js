@@ -100,7 +100,6 @@ function createAttachment(req, fileName, content, callback) {
         },
       }, function (err, data, body) {
         var itemId = data.headers.location.split('/')[6]
-        console.log(itemId)
         console.log("Item created?: ", data.statusCode)
         callback({
           success: true,
@@ -111,9 +110,16 @@ function createAttachment(req, fileName, content, callback) {
   })
 }
 
+function updateAttachment(itemId, callback) {
+
+  callback({
+    success: true
+  })
+}
 
 module.exports = {
   getAttachment: getAttachment,
   getContent: getContent,
-  createAttachment: createAttachment
+  createAttachment: createAttachment,
+  updateAttachment: updateAttachment
 }
