@@ -64,11 +64,18 @@ function commitChanges(session, data, callback) {
         success: false
       }
     } else {
-      console.log(response.body)
-      callback({
-        sha: response.body.content.sha,
-        success: true
-      })
+      console.log(response.statusCode)
+      if (response.statusCode === 200) {
+        callback({
+          sha: response.body.content.sha,
+          success: true
+        })
+      } else {
+        callback({
+          sha: null,
+          success: false
+        })
+      }
     }
   })
 }

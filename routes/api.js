@@ -25,7 +25,7 @@ router.get('/searchContent', function (req, res, next) {
   var options = {
     hostname: 'byuidev.equella.ecollege.com',
     port: 443,
-    path: '/original/api/search/?q=' + query + '&start=0&length=10&reverse=false&info=attachment&showall=false',
+    path: '/original/api/search/?q=' + query + '&start=0&length=10&reverse=false&info=basic%2Cattachment&showall=false',
     method: 'GET',
     headers: headers
   }
@@ -49,7 +49,7 @@ router.get('/getCourseContent', function (req, res, next) {
   var options = {
     hostname: 'byuidev.equella.ecollege.com',
     port: 443,
-    path: "/original/api/search/?start=0&length=10&reverse=false&where=%2Fxml%2FBYUI_extended%2FBYUI_information%2Fcourse_names%2Fcourse_name%20%3D%20'" + encodeURI(courseId) + "'%20&info=attachment&showall=false",
+    path: "/original/api/search/?start=0&length=10&reverse=false&where=%2Fxml%2FBYUI_extended%2FBYUI_information%2Fcourse_names%2Fcourse_name%20%3D%20'" + encodeURI(courseId) + "'%20&info=basic%2Cattachment&showall=false",
     method: 'GET',
     headers: headers
   }
@@ -67,24 +67,35 @@ router.get('/getCourseContent', function (req, res, next) {
 
 router.put('/content', function (req, res, next) {
   //actually use logic to get user's key here
+  if (!req.session.equellaUrl) {
+    next("No equella url provided")
+  }
+  var gitSuccess = null,
+    equSuccess = null;
   git.commitChanges(req.session, req.body, function (data) {
     if (data.success) {
       console.log("Updating sha")
       req.session.file_sha = data.sha;
     }
-    res.json({
-      sucess: data.succes
-    })
+    gitSuccess = data.success
+    respond()
   })
-  var itemId = req.session.equellaUrl.split('/')[5]
-  equ.updateAttachment(itemId, req.body, function (data) {
-    if (data.sucess) {
+  equ.updateAttachment(req.session.equellaUrl, req.body, function (data) {
+    if (data.success) {
       console.log("Updated Equella")
     }
-    res.json({
-      sucess: data.success
-    })
+    equSuccess = data.success
   })
+
+  function respond() {
+    if ((gitSuccess !== null) && (equSuccess !== null)) {
+      res.json({
+        gitSuccess: gitSuccess,
+        equSuccess: equSuccess,
+        success: gitSuccess && equSuccess
+      })
+    }
+  }
 })
 
 router.get('/content', function (req, res, next) {
@@ -97,10 +108,7 @@ router.get('/content', function (req, res, next) {
     uriName = equellaUrl.split('/')[7]
     getPage()
   } else {
-    var itemId = equellaUrl.split('/')[5]
-    var version = equellaUrl.split('/')[6]
-    var attachmentId = equellaUrl.split('=')[1]
-    equ.getAttachment(itemId, attachmentId, version, function (attachment) {
+    equ.getAttachment(equellaUrl, function (attachment) {
       uriName = encodeURI(attachment.description)
       getPage()
     })

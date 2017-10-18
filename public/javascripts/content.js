@@ -17,6 +17,7 @@ function logResults(response, ele) {
     return typeof (result.attachments) != 'undefined'
   })
   reduced.forEach(function (item) {
+    console.log(item)
     item.attachments.forEach(function (attachment) {
       var html = '<a href="https://byui.instructure.com/courses/142/external_content/success/external_tool_dialog?return_type=lti_launch_url&url=https%3A%2F%2Flocalhost%3A1830%2Flti%2Fcontent%2F%3Furl=' + escape(encodeURIComponent(attachment.links.view)) + '&title=' + attachment.description + '" class="collection-item">' + attachment.description + '</a>'
       document.getElementById(ele).insertAdjacentHTML('beforeend', html)
