@@ -18,26 +18,28 @@
 </head>
 
 <body>
-    <nav>
-      <div class="nav-wrapper blue accent-4">
-        <form id="searchForm" action="javascript:search()">
-          <div class="input-field">
-            <input id="search" type="search" required placeholder="Search BYU-I Content">
-            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-            <i class="material-icons">close</i>
-          </div>
-        </form>
-      </div>
-    </nav>
+  <nav>
+    <div class="nav-wrapper light-blue darken-1">
+      <form id="searchForm" action="javascript:search()">
+        <div class="input-field">
+          <input id="search" type="search" required placeholder="Search BYU-I Content" title="Search BYU-I Content">
+          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+          <i class="material-icons">close</i>
+        </div>
+      </form>
+    </div>
+  </nav>
   <div class="container">
     <div class="fixed-action-btn" style="top:24px">
-      <a class="btn-floating blue darken-4 waves-effect waves-light" href="#" class="collection-item" onclick="showAddPage()"><i class="material-icons">add</i></a>
+      <a class="btn-floating light-blue darken-3 waves-effect waves-light" href="#" class="collection-item" onclick="showAddPage()"><i class="material-icons">add</i></a>
     </div>
-    <div id="createDocument" class="card hidden">
-      <div class="card-content">
-      <h5>Title for new page:</h5>
-      <input type="text" id="title">
-      <button onclick="createPage()" class="btn blue darken-4 waves-effect waves-light">Create Page</button>
+    <div class="row">
+      <div id="createDocument" class="card hidden">
+        <div class="card-content">
+          <h5>Title for new page:</h5>
+          <input type="text" id="title">
+          <button onclick="createPage()" class="btn light-blue darken-3 waves-effect waves-light">Create Page</button>
+        </div>
       </div>
     </div>
     <div id="searchResults" class="collection hidden"></div>

@@ -7,9 +7,14 @@
   display: none;
 }
 
-.nav-wrapper input[type=search]:not(.browser-default):focus:not([readonly]), input[type="text"]:not(.browser-default):focus:not([readonly]) {
-  border-bottom: 1px solid #2962ff;
-  -webkit-box-shadow: 0 1px 0 0 #2962ff;
-  -moz-box-shadow: 0 1px 0 0 #2962ff;
-  box-shadow: 0 1px 0 0 #2962ff;
+.nav-wrapper input[type=search]:not(.browser-default):focus:not([readonly]),
+input[type="text"]:not(.browser-default):focus:not([readonly]) {
+  border-bottom: 1px solid #0277bd;
+  -webkit-box-shadow: 0 1px 0 0 #0277bd;
+  -moz-box-shadow: 0 1px 0 0 #0277bd;
+  box-shadow: 0 1px 0 0 #0277bd;
+}
+
+#createDocument {
+  margin-top: 2rem;
 }
