@@ -18,42 +18,35 @@
 </head>
 
 <body>
-  <div class="container">
-    <h4 class="pull-left">Content Search</h4>
-    <div class="fixed-action-btn" style="top:24px">
-      <a class="btn-floating" href="#" class="collection-item" onclick="showAddPage()"><i class="material-icons">add</i></a>
-    </div>
-    <div id="createDocument" class="hidden">
-      <h5>Title for new page:</h5>
-      <input type="text" id="title">
-      <button onclick="createPage()" class="btn">Create Page</button>
-    </div>
-    <p>Welcome
-      <%= name %>! Please search for the desired resource, or select it below:</p>
     <nav>
-      <div class="nav-wrapper blue">
+      <div class="nav-wrapper blue accent-4">
         <form id="searchForm" action="javascript:search()">
           <div class="input-field">
-            <input id="search" type="search" required>
+            <input id="search" type="search" required placeholder="Search BYU-I Content">
             <label class="label-icon" for="search"><i class="material-icons">search</i></label>
             <i class="material-icons">close</i>
           </div>
         </form>
       </div>
     </nav>
-    <div id="searchResults" class="collection"></div>
-    <h4>Content for
+  <div class="container">
+    <div class="fixed-action-btn" style="top:24px">
+      <a class="btn-floating blue darken-4 waves-effect waves-light" href="#" class="collection-item" onclick="showAddPage()"><i class="material-icons">add</i></a>
+    </div>
+    <div id="createDocument" class="card hidden">
+      <div class="card-content">
+      <h5>Title for new page:</h5>
+      <input type="text" id="title">
+      <button onclick="createPage()" class="btn blue darken-4 waves-effect waves-light">Create Page</button>
+      </div>
+    </div>
+    <div id="searchResults" class="collection hidden"></div>
+    <h5>Content for
       <%= courseId %>
-    </h4>
+    </h5>
     <div id="courseContent" class="collection"></div>
   </div>
 
-  <!-- <h2>The following are for developmental reference only</h2>
-      <% for(prop in info){ %>
-        <p>
-          <%= prop + " | " + info[prop] %>
-        </p>
-        <% } %>-->
 </body>
 
 </html>

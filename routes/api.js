@@ -25,7 +25,7 @@ router.get('/searchContent', function (req, res, next) {
   var options = {
     hostname: 'byuidev.equella.ecollege.com',
     port: 443,
-    path: '/original/api/search/?q=' + query + '&start=0&length=10&reverse=false&info=attachment&showall=false',
+    path: '/original/api/search/?q=' + query + '&start=0&length=10&reverse=false&info=basic%2Cattachment&showall=false',
     method: 'GET',
     headers: headers
   }
@@ -49,7 +49,7 @@ router.get('/getCourseContent', function (req, res, next) {
   var options = {
     hostname: 'byuidev.equella.ecollege.com',
     port: 443,
-    path: "/original/api/search/?start=0&length=10&reverse=false&where=%2Fxml%2FBYUI_extended%2FBYUI_information%2Fcourse_names%2Fcourse_name%20%3D%20'" + encodeURI(courseId) + "'%20&info=attachment&showall=false",
+    path: "/original/api/search/?start=0&length=10&reverse=false&where=%2Fxml%2FBYUI_extended%2FBYUI_information%2Fcourse_names%2Fcourse_name%20%3D%20'" + encodeURI(courseId) + "'%20&info=basic%2Cattachment&showall=false",
     method: 'GET',
     headers: headers
   }
