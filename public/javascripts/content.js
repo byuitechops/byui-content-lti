@@ -20,7 +20,7 @@ function logResults(response, ele) {
   reduced.forEach(function (item) {
     console.log(item)
     var html = '<p class="collection-item active blue accent-4">' + item.name + '</p>'
-      document.getElementById(ele).insertAdjacentHTML('beforeend', html)
+    document.getElementById(ele).insertAdjacentHTML('beforeend', html)
     item.attachments.forEach(function (attachment) {
       var html = '<a href="https://byui.instructure.com/courses/142/external_content/success/external_tool_dialog?return_type=lti_launch_url&url=https%3A%2F%2Flocalhost%3A1830%2Flti%2Fcontent%2F%3Furl=' + escape(encodeURIComponent(attachment.links.view)) + '&title=' + attachment.description + '" class="collection-item blue-text text-accent-4">' + attachment.description + '</a>'
       document.getElementById(ele).insertAdjacentHTML('beforeend', html)

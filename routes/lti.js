@@ -23,6 +23,7 @@ router.post('/content', function (req, res, next) {
     req.session.equellaUrl = null;
     // add ability to set new page name later
     res.render('edit', {})
+
   } else {
     req.session.equellaUrl = req.query.url;
     if (ltiInfo.roles.includes('Instructor')) {

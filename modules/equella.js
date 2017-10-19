@@ -2,7 +2,7 @@
 var https = require('https')
 var auth
 var request = require('request')
-var btoa = require('btoa')
+var atob = require('atob')
 /*check for global auth, else load it from the disk*/
 if (!process.env.access_token) {
   auth = require('../auth.json')
@@ -15,8 +15,11 @@ var headers = {
   "X-Authorization": "access_token=" + auth.access_token
 }
 
-function getAttachment(itemId, attachmentId, version, callback) {
-
+function getAttachment(equellaUrl, callback) {
+  // expects a url with both ids such as https://byuidev.equella.ecollege.com/original/items/5b10c154-7d3d-47b6-865d-1f0644e32070/1/?attachment.uuid=2923a479-9bee-47c8-9683-bf7c250f6409&attachment.stream=true
+  var itemId = equellaUrl.split('/')[5]
+  var version = equellaUrl.split('/')[6]
+  var attachmentId = equellaUrl.split('=')[1]
   var options = {
     hostname: 'byuidev.equella.ecollege.com',
     port: 443,
@@ -103,17 +106,33 @@ function createAttachment(req, fileName, content, callback) {
         console.log("Item created?: ", data.statusCode)
         callback({
           success: true,
-          contentUrl: "https://byuidev.equella.ecollege.com/original/file/" + itemId + "/1/" + encodeURI(fileName) + ".html",
+          contentUrl: "https://byuidev.equella.ecollege.com/original/items/" + itemId + "/1/?attachment.uuid=" + fileAreaId,
         })
       })
     })
   })
 }
 
-function updateAttachment(itemId, callback) {
-
-  callback({
-    success: true
+function updateAttachment(equellaUrl, content, callback) {
+  getAttachment(equellaUrl, function (attachment) {
+    request.put('https://byuidev.equella.ecollege.com/original/api/file/' + attachment.uuid + '/content/' + attachment.filename, {
+      "headers": {
+        "X-Authorization": "access_token=" + auth.access_token,
+        "Content-Type": "text/html",
+      },
+      "body": atob(content.content)
+    }, function (err, data, body) {
+      console.log(body)
+      if (data.statusCode === 200) {
+        callback({
+          success: true
+        })
+      } else {
+        callback({
+          success: false
+        })
+      }
+    })
   })
 }
 
