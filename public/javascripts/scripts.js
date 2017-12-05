@@ -90,7 +90,7 @@ window.onload = function () {
       data: settings
     }).done(function (data) {
       console.log(data)
-      showToast(data.success)
+      showToast(data.gitSuccess)
     })
   }
 

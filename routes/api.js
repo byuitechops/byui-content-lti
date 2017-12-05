@@ -80,15 +80,15 @@ router.put('/content', function (req, res, next) {
     gitSuccess = data.success
     respond()
   })
-  equ.updateAttachment(req.session.equellaUrl, req.body, function (data) {
-    if (data.success) {
-      console.log("Updated Equella")
-    }
-    equSuccess = data.success
-  })
+//  equ.updateAttachment(req.session.equellaUrl, req.body, function (data) {
+//    if (data.success) {
+//      console.log("Updated Equella")
+//    }
+//    equSuccess = data.success
+//  })
 
   function respond() {
-    if ((gitSuccess !== null) && (equSuccess !== null)) {
+    if ((gitSuccess !== null) /*&& (equSuccess !== null)*/) {
       res.json({
         gitSuccess: gitSuccess,
         equSuccess: equSuccess,
@@ -152,7 +152,7 @@ router.get('/content', function (req, res, next) {
 router.post('/content', function (req, res, next) {
   var fileName = req.query.file_name;
   var content = "<h1>" + fileName + "</h1>";
-  equ.createAttachment(req, fileName, content, function (response) {
+  equ.createAttachment(fileName, content, function (response) {
     res.json({
       url: 'https://byui.instructure.com/courses/142/external_content/success/external_tool_dialog?return_type=lti_launch_url&url=https%3A%2F%2Flocalhost%3A1830%2Flti%2Fcontent%2F%3Furl=' + escape(encodeURIComponent(response.contentUrl)) + '&title=' + escape(fileName)
     })
