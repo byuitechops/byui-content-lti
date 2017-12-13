@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 
 }));
-
+// Session must be initialized before ltiMiddleware!
 app.use(session({
   secret: 'byui-content-session',
   resave: false,

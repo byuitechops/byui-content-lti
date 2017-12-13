@@ -1,4 +1,6 @@
 /*eslint-env node*/
+/* These endpoints are used from the interface presented when the LTI launch is initiated */
+
 var express = require('express');
 var router = express.Router();
 var https = require('https');
@@ -7,6 +9,7 @@ var request = require('request');
 var btoa = require('btoa');
 var git = require('../modules/github.js')
 
+/* Check for a production environment, else use a local token for canvas authentication */
 var auth
 if (!process.env.access_token) {
   auth = require('../auth.json')
@@ -41,6 +44,7 @@ router.get('/searchContent', function (req, res, next) {
   request.end();
 })
 
+/* Returns a list of items that are tagged with the course code */
 router.get('/getCourseContent', function (req, res, next) {
   var courseId = req.query.courseId;
   var headers = {
@@ -65,6 +69,7 @@ router.get('/getCourseContent', function (req, res, next) {
   request.end();
 })
 
+/* the update content endpoint. THis spawns the git commit, and the Equella update (Not working now)*/
 router.put('/content', function (req, res, next) {
   //actually use logic to get user's key here
   if (!req.session.equellaUrl) {
@@ -98,6 +103,9 @@ router.put('/content', function (req, res, next) {
   }
 })
 
+/* This gets the gitHub page for the equella content.
+   Right now it is just matching the name of the file.
+   More sofisticated organization should be decided upon. */
 router.get('/content', function (req, res, next) {
   if (!req.session.equellaUrl) {
     next("No equella url provided")
@@ -149,6 +157,7 @@ router.get('/content', function (req, res, next) {
   }
 })
 
+/* This creates a new page's item and attachment in equella */
 router.post('/content', function (req, res, next) {
   var fileName = req.query.file_name;
   var content = "<h1>" + fileName + "</h1>";
